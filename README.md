@@ -1,31 +1,56 @@
 # AI Hedge Fund
 
-This is a proof concept for an AI-powered hedge fund.  The goal of this project is to explore the use of AI to make trading decisions.  This project is for **educational** purposes only and is not intended for real trading or investment.
+This is a proof of concept for an AI-powered hedge fund, designed to explore the use of AI in making trading decisions. The primary purpose of this project is educational and it is not intended for real-world trading or investment.
 
-This system employs several agents working together:
+The system features several agents working collaboratively:
 
-1. Valuation Agent - Calculates the intrinsic value of a stock and generates trading signals
-2. Sentiment Agent - Analyzes market sentiment and generates trading signals
-3. Fundamentals Agent - Analyzes fundamental data and generates trading signals
-4. Technical Analyst - Analyzes technical indicators and generates trading signals
-5. Risk Manager - Calculates risk metrics and sets position limits
-6. Portfolio Manager - Makes final trading decisions and generates orders
-   
-<img width="1060" alt="Screenshot 2025-01-03 at 5 39 25 PM" src="https://github.com/user-attachments/assets/4611aace-27d0-43b2-9a70-385b40336e3f" />
+1. **Valuation Agent** - Calculates stock intrinsic value and generates trading signals.
+2. **Sentiment Agent** - Analyzes market sentiment to generate trading signals.
+3. **Fundamentals Agent** - Examines fundamental data to produce trading signals.
+4. **Technical Analyst** - Evaluates technical indicators for generating trading signals.
+5. **Risk Manager** - Calculates risk metrics and sets position limits.
+6. **Portfolio Manager** - Makes final trading decisions and generates orders.
 
-Note: the system simulates trading decisions, it does not actually trade.
+```mermaid
+graph TD
+    A[Start] -->|1: Start| B[Valuation Analyst]
+    A -->|1: Start| C[Sentiment Analyst]
+    A -->|1: Start| D[Fundamentals Analyst]
+    A -->|1: Start| E[Technical Analyst]
+    B -->|2: Trading Signals| F[Risk Manager]
+    C -->|2: Trading Signals| F
+    D -->|2: Trading Signals| F
+    E -->|2: Trading Signals| F
+    F -->|3: Risk Signals| G[Portfolio Manager]
+    G -->|4: Take Action| H[Buy]
+    G -->|4: Take Action| I[Sell]
+    G -->|4: Take Action| J[Hold]
+
+%% Individual node styling.
+    style H color:#FFFFFF, fill:#009688, stroke:#009688
+    style I color:#FFFFFF, stroke:#FF7F50, fill:#FF7F50
+    style J color:#FFFFFF, stroke:#2962FF, fill:#2962FF
+
+    style B color:#000000, fill:#FFE082, stroke:#FFE082
+    style C color:#000000, fill:#FFE082, stroke:#FFE082
+    style D color:#000000, fill:#FFE082, stroke:#FFE082
+    style E color:#000000, fill:#FFE082, stroke:#FFE082  
+
+```
+
+*Note: The system simulates trading actions without executing real trades.*
 
 ## Disclaimer
 
-This project is for **educational and research purposes only**.
+This project is strictly for **educational and research purposes only**:
 
-- Not intended for real trading or investment
+- Not suitable for actual trading or investment
 - No warranties or guarantees provided
-- Past performance does not indicate future results
+- Past performance does not predict future results
 - Creator assumes no liability for financial losses
-- Consult a financial advisor for investment decisions
+- Consult a financial advisor before making investment decisions
 
-By using this software, you agree to use it solely for learning purposes.
+Use of this software implies agreement to use it solely for learning purposes.
 
 ## Table of Contents
 - [Setup](#setup)
@@ -38,80 +63,80 @@ By using this software, you agree to use it solely for learning purposes.
 
 ## Setup
 
-Clone the repository:
+Clone the repository and navigate to the project directory:
+
 ```bash
-git clone https://github.com/virattt/ai-hedge-fund.git
+git clone https://github.com/LiteObject/ai-hedge-fund.git
 cd ai-hedge-fund
 ```
 
-1. Install Poetry (if not already installed):
-```bash
-curl -sSL https://install.python-poetry.org | python3 -
-```
+1. Install dependencies using pip:
+   
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-2. Install dependencies:
-```bash
-poetry install
-```
+2. Set up your environment variables by copying the example configuration:
 
-3. Set up your environment variables:
-```bash
-# Create .env file for your API keys
-cp .env.example .env
-```
+   ```bash
+   cp .env.example .env
+   ```
 
-Set the API keys in the .env file:
-```
-# Get your OpenAI API key from https://platform.openai.com/
-OPENAI_API_KEY=your-openai-api-key
+Update the `.env` file with your Ollama API key (as it replaces the OpenAI API):
 
-# Get your Financial Datasets API key from https://financialdatasets.ai/
+```plaintext
+# Obtain Financial Datasets API key from https://financialdatasets.ai/
 FINANCIAL_DATASETS_API_KEY=your-financial-datasets-api-key
 ```
 
-**Important**: You must to set the OpenAI API key for the hedge fund to work.
+**Important**: 
 
-Financial data for AAPL, GOOGL, MSFT, NVDA, and TSLA is free and does not require an API key.
-
-For any other ticker, you will need to set the `FINANCIAL_DATASETS_API_KEY` in the .env file.
+Financial data for AAPL, GOOGL, MSFT, NVDA, and TSLA is available at no cost and does not require an API key. For other tickers, you must set the `FINANCIAL_DATASETS_API_KEY`.
 
 ## Usage
 
 ### Running the Hedge Fund
+
+To start the hedge fund simulation:
+
 ```bash
-poetry run python src/main.py --ticker AAPL
+python src/main.py --ticker AAPL
 ```
 
 **Example Output:**
-<img width="992" alt="Screenshot 2025-01-06 at 5 50 17 PM" src="https://github.com/user-attachments/assets/e8ca04bf-9989-4a7d-a8b4-34e04666663b" />
+![alt text](images/image1.png)
 
-You can also specify a `--show-reasoning` flag to print the reasoning of each agent to the console.
+You can also include a `--show-reasoning` flag to view detailed reasoning from each agent in the console.
 
 ```bash
-poetry run python src/main.py --ticker AAPL --show-reasoning
+python src/main.py --ticker AAPL --show-reasoning
 ```
-You can optionally specify the start and end dates to make decisions for a specific time period.
+
+Optionally, specify start and end dates for decision-making over a specific period:
 
 ```bash
-poetry run python src/main.py --ticker AAPL --start-date 2024-01-01 --end-date 2024-03-01 
+python src/main.py --ticker AAPL --start-date 2024-01-01 --end-date 2024-03-01 
 ```
 
 ### Running the Backtester
 
+To backtest strategies:
+
 ```bash
-poetry run python src/backtester.py --ticker AAPL
+python src/backtester.py --ticker AAPL
 ```
 
 **Example Output:**
-<img width="941" alt="Screenshot 2025-01-06 at 5 47 52 PM" src="https://github.com/user-attachments/assets/00e794ea-8628-44e6-9a84-8f8a31ad3b47" />
+![alt text](images/image2.png)
 
-You can optionally specify the start and end dates to backtest over a specific time period.
+You can also specify start and end dates to conduct a backtest over a particular timeframe:
 
 ```bash
-poetry run python src/backtester.py --ticker AAPL --start-date 2024-01-01 --end-date 2024-03-01
+python src/backtester.py --ticker AAPL --start-date 2024-01-01 --end-date 2024-03-01
 ```
 
 ## Project Structure 
+
 ```
 ai-hedge-fund/
 ├── src/
@@ -125,19 +150,7 @@ ai-hedge-fund/
 │   ├── tools/                    # Agent tools
 │   │   ├── api.py                # API tools
 │   ├── backtester.py             # Backtesting tools
-│   ├── main.py # Main entry point
-├── pyproject.toml
+│   └── main.py                   # Main entry point
+├── requirements.txt
 ├── ...
 ```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
